@@ -11,17 +11,16 @@ const getResults = async (req, res) => {
   if (userAnswers.length !== 12) {
     throw createError(400);
   }
-  const answersIds = userAnswers.map(answer => answer.questionId);
+  const answersIds = userAnswers.map(answer => answer._id);
   const rightAnswers = await Question.find(
-    { questionType, questionId: { $in: answersIds } },
-    'questionId rightAnswer -_id',
+    { questionType, _id: { $in: answersIds } },
+    'rightAnswer _id',
   );
 
   const comparedAnswers = userAnswers
     .map(userAnsw =>
       rightAnswers.find(
-        rightAnsw =>
-          userAnsw.questionId === rightAnsw.questionId && userAnsw.answer === rightAnsw.rightAnswer,
+        rightAnsw => userAnsw._id === rightAnsw._id && userAnsw.answer === rightAnsw.rightAnswer,
       ),
     )
     .filter(el => el !== undefined);

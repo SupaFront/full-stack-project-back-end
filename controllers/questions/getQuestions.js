@@ -12,7 +12,7 @@ const getQuestions = async (req, res) => {
     },
   ])
     .sample(12)
-    .project({ _id: 0, rightAnswer: 0 });
+    .project({ _id: 1, rightAnswer: 0 });
   res.status(200).json(result);
 };
 
