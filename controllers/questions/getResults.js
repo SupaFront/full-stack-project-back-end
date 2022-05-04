@@ -3,8 +3,7 @@ const { createError } = require('../../middleware');
 const { Question, questionTypes } = require('../../models/question');
 
 const getResults = async (req, res) => {
-  const { type } = req.params;
-  const questionType = type.split('-')[0];
+  const { type: questionType } = req.params;
   if (!questionTypes.includes(questionType)) {
     throw createError(404);
   }

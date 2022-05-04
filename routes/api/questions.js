@@ -8,7 +8,7 @@ const router = express.Router();
 router.get('/:type', authenticate, ctrlWrapper(questionsCtrl.getQuestions));
 
 router.post(
-  '/:type',
+  '/results/:type',
   authenticate,
   validation(questionsJoiSchemas.answers),
   ctrlWrapper(questionsCtrl.getResults),
