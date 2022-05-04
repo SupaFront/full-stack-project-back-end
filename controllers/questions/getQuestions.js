@@ -1,7 +1,11 @@
-const { Question } = require('../../models/question');
+const { createError } = require('../../middleware');
+const { Question, questionTypes } = require('../../models/question');
 
 const getQuestions = async (req, res) => {
   const { type: questionType } = req.params;
+  if (!questionTypes.includes(questionType)) {
+    throw createError(404);
+  }
   const result = await Question.aggregate([
     {
       $match: { questionType: { $eq: questionType } },

@@ -1,10 +1,12 @@
 const { createResultMessage } = require('../../helpers');
 const { createError } = require('../../middleware');
-const { Question } = require('../../models/question');
+const { Question, questionTypes } = require('../../models/question');
 
 const getResults = async (req, res) => {
   const questionType = req.params.type.split('-')[0];
-  console.log(questionType);
+  if (!questionTypes.includes(questionType)) {
+    throw createError(404);
+  }
   const { answers: userAnswers } = req.body;
   if (userAnswers.length !== 12) {
     throw createError(400);

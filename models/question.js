@@ -43,4 +43,4 @@ const questionsJoiSchemas = {
 
 const Question = model('question', questionSchema);
 
-module.exports = { questionsJoiSchemas, Question };
+module.exports = { questionsJoiSchemas, Question, questionTypes };
