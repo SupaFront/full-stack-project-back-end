@@ -5,19 +5,10 @@ const { questionsJoiSchemas } = require('../../models/question');
 
 const router = express.Router();
 
-router.get('/theory', authenticate, ctrlWrapper(questionsCtrl.getQuestions));
-
-router.get('/tech', authenticate, ctrlWrapper(questionsCtrl.getQuestions));
+router.get('/:type', authenticate, ctrlWrapper(questionsCtrl.getQuestions));
 
 router.post(
-  '/tech-results',
-  authenticate,
-  validation(questionsJoiSchemas.answers),
-  ctrlWrapper(questionsCtrl.getResults),
-);
-
-router.post(
-  '/theory-results',
+  '/:type',
   authenticate,
   validation(questionsJoiSchemas.answers),
   ctrlWrapper(questionsCtrl.getResults),

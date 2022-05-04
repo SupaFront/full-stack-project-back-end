@@ -1,7 +1,7 @@
 const { Question } = require('../../models/question');
 
 const getQuestions = async (req, res) => {
-  const questionType = req.path.slice(1);
+  const { type: questionType } = req.params;
   const result = await Question.aggregate([
     {
       $match: { questionType: { $eq: questionType } },
