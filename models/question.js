@@ -14,16 +14,12 @@ const questionSchema = Schema(
       enum: questionTypes,
       required: true,
     },
-    questionId: {
-      type: Number,
-      required: true,
-    },
     rightAnswer: {
       type: String,
       required: true,
     },
     answers: {
-      type: [{ type: String }],
+      type: [String],
       required: true,
     },
   },
@@ -32,7 +28,7 @@ const questionSchema = Schema(
 
 const questionsAnswersJoiScheama = Joi.object({
   answers: Joi.array().items({
-    questionId: Joi.number().required(),
+    _id: Joi.string().hex().length(24),
     answer: Joi.string().required(),
   }),
 });
