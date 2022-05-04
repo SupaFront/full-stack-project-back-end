@@ -3,7 +3,8 @@ const { createError } = require('../../middleware');
 const { Question } = require('../../models/question');
 
 const getResults = async (req, res) => {
-  const questionType = req.path.split('-')[0].slice(1);
+  const questionType = req.params.type.split('-')[0];
+  console.log(questionType);
   const { answers: userAnswers } = req.body;
   if (userAnswers.length !== 12) {
     throw createError(400);
