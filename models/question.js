@@ -1,10 +1,17 @@
 const Joi = require('joi');
 const { Schema, model } = require('mongoose');
 
+const questionTypes = ['tech', 'theory'];
+
 const questionSchema = Schema(
   {
     question: {
       type: String,
+      required: true,
+    },
+    questionType: {
+      type: String,
+      enum: questionTypes,
       required: true,
     },
     questionId: {
