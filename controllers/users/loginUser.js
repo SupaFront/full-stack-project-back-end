@@ -10,7 +10,7 @@ const loginUser = async (req, res) => {
   const { email, password } = req.body;
   const user = await User.findOne({ email });
   if (!user) {
-    throw createError(401);
+    throw createError(401, 'User is not registered');
   }
   const compareResult = await bcrypt.compare(password, user.password);
   if (!compareResult) {
