@@ -18,7 +18,7 @@ app.use('/api/auth', usersRouter);
 app.use('/api/tests', questionsRouter);
 
 app.use((req, res) => {
-  res.status(404).json({ message: 'Not Found', connect: mongoose.connection.readyState });
+  res.status(404).json({ message: 'Not Found' });
 });
 
 app.use((err, req, res, next) => {
