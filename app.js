@@ -1,6 +1,7 @@
 const express = require('express');
 const logger = require('morgan');
 const cors = require('cors');
+const mongoose = require('mongoose');
 require('dotenv').config();
 
 const { questionsRouter, usersRouter } = require('./routes/api');
@@ -17,7 +18,7 @@ app.use('/api/auth', usersRouter);
 app.use('/api/tests', questionsRouter);
 
 app.use((req, res) => {
-  res.status(404).json({ message: 'Not Found', connect: global.connect });
+  res.status(404).json({ message: 'Not Found', connect: mongoose.connection.readyState });
 });
 
 app.use((err, req, res, next) => {
