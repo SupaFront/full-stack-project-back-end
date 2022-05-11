@@ -7,8 +7,8 @@ require('dotenv').config();
 const { SECRET_KEY } = process.env;
 
 const loginUser = async (req, res) => {
-  // const { email, password } = req.body;
-  // const user = await User.findOne({ email });
+  const { email, password } = req.body;
+  const user = await User.findOne({ email });
   // if (!user) {
   //   throw createError(401, 'User is not registered');
   // }
@@ -22,6 +22,6 @@ const loginUser = async (req, res) => {
   // const token = jwt.sign(payload, SECRET_KEY, { expiresIn: '24h' });
   // await User.findByIdAndUpdate(user._id, { token });
   // res.json({ token, user: { email: user.email, _id: user._id } });
-  res.json(req.body);
+  res.json(user);
 };
 module.exports = loginUser;
