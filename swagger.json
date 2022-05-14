@@ -1,0 +1,610 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "version": "2.0.2",
+    "title": "Pro Test API docs",
+    "description": "API documentation for GoIT project 'Pro Test'",
+    "license": {
+       "name": "MIT",
+      "url": "https://opensource.org/licenses/MIT"
+  }},
+  "consumes": ["application/json"],
+  "produces": ["application/json"],
+  "servers": [{ "url": "https://fullstack-pro-test.herokuapp.com" }],
+  "tags": [
+    {
+      "name": "Auth",
+      "description": "Authorization endpoints"
+    },
+    {
+      "name": "QA-test",
+      "description": "QA-test endpoints"
+    }
+  ],
+  "paths": {
+    "/auth/register": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "User registration",
+        "parameters": [],
+        "requestBody": {
+          "description": "Registration's object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegistrationRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RegistrationResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (invalid request body)",
+            "content": {
+               
+            }
+          },
+          "409": {
+            "description": "Provided email already exists",
+            "content": {
+                
+            }
+          }
+        }
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "User authentication",
+        "parameters": [],
+        "requestBody": {
+          "description": "Authentication's object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LoginResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (invalid request body)",
+            "content": {}
+          },
+          "403": {
+            "description": "Email doesn't exist / Password is wrong",
+            "content": {
+               
+            }
+          }
+        }
+      }
+    },
+    "/auth/logout": {
+      "post": {
+          "security":[{"bearerAuth":[]}],
+        "tags": ["Auth"],
+        "summary": "Logout",
+        "parameters": [],
+        "responses": {
+          "204": {
+            "description": "Successful operation",
+            "content": {}
+          },
+          "401": {
+            "description": "Unauthorized (invalid access token)",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/auth/current": {
+      "get": {
+        "tags": ["Auth"],
+        "summary": "Get current user info",
+        "security": [{"bearerAuth":[]}],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/currentUserResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized (invalid refresh token)",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/tests/{type}": {
+      "get": {
+        "tags": ["QA-test"],
+        "summary": "Get QA test questions",
+        "parameters": [
+            {
+                "- in":"path",
+            "name": "type",
+            "description": "Test's type parameter ('theory' or 'tech')",
+        "schema": {
+            "type": "string",
+            "required": "true", 
+            "description": "Test's type parameter ('theory' or 'tech')"
+            }}
+        ],
+        "security": [{"bearerAuth":[]}],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QATest"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (no token provided)",
+            "content": {}
+          },
+          "401": {
+            "description": "Unauthorized (invalid access token)",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/tests/results/{type}": {
+      "post": {
+          "security":[{"bearerAuth":[]}],
+        "tags": ["QA-test"],
+        "summary": "Get QA test results",
+        "parameters": [
+            {"- in":"path",
+            "name": "type",
+            "description": "Test's type parameter ('theory' or 'tech')",
+        "schema": {"type": "string",
+            "required": "true", "description": "Test's type parameter ('theory' or 'tech')"}}
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GetTestResults"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TestResult"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (invalid request body / no token provided)",
+            "content": {}
+          },
+          "401": {
+            "description": "Unauthorized (invalid access token)",
+            "content": {}
+          }
+        }
+      }
+    }
+       
+    
+  },
+  "components": {
+    "schemas": {
+      "RegistrationRequest": {
+        "required": ["email", "password"],
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "description": "User's email",
+            "format": "email"
+          },
+          "password": {
+            "type": "string",
+            "description": "User's password",
+            "example": "qwerty123"
+          }
+        }
+      },
+      "RegistrationResponse": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "description": "User's email",
+            "format": "email"
+          },
+          "_id": {
+            "type": "string",
+            "description": "User's id",
+            "example": "507f1f77bcf86cd799439011"
+          }
+        }
+      },
+      "LoginRequest": {
+        "required": ["email", "password"],
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "description": "User's email",
+            "format": "email"
+          },
+          "password": {
+            "type": "string",
+            "description": "User's password",
+            "example": "qwerty123"
+          }
+        }
+      },
+      "LoginResponse": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string",
+            "description": "Session's access token (needed for all requests)",
+            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI1ZmMyMDg1YmQwOTM2NTI4MTA3Y2UyNzQiLCJzaWQiOiI1ZmMyZDJmY2UxZDIwNTA2NzAyYmRkMjIiLCJpYXQiOjE2MDY2MDM1MTYsImV4cCI6MTYwNjYwNzExNn0.rJ_QjU4KvA76H96RHsvOBChK0Vjbd0NmqjMxdQVJIXA"
+          },
+          "user": {
+            "type": "object",
+            "properties": {
+              "email": {
+                "type": "string",
+                "description": "User's email",
+                "format": "email"
+              },
+              "_id": {
+                "type": "string",
+                "description": "User's id",
+                "example": "507f1f77bcf86cd799439012"
+              }
+            }
+          }
+        }
+      },
+      "currentUserResponse": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "description": "User's email",
+            "format": "email"
+          },
+          "_id": {
+            "type": "string",
+            "description": "User's id"
+          }
+        },
+        "example":{
+            "email": "test@gail.com",
+            "_id": "507f1f77bcf86cd799439011"
+        }
+      },
+      "QATest": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "question": {
+              "type": "string",
+              "description": "A question"
+            },
+            "_id": {
+              "type": "string",
+              "description": "Question's id"
+            },
+            "questionType":{
+                "type": "string",
+              "description": "Question's type"
+            },
+            "answers": {
+              "type": "array",
+              "description": "Answers to the question",
+              "items": {
+                "type": "string",
+                "description": "Answer options"
+              }
+            }
+          }
+        },
+        "example": [
+    {
+        "_id": "6272da62541aed4b347c0b1d",
+        "question": "Provide correct example of Absolute XPath",
+        "questionType": "theory",
+        "answers": [
+            "html/body/div/[3]/div/div/[1]/div/div/div[1]/div/input",
+            "html/body/div(3)/div/div(1)/div/div/div)1)/div/input",
+            "html\bodydiv[3]divdiv[1]divdivdiv[1]divinput/",
+            "html//body/div[3]/div/div[1]/div/div/div[1]/div/input",
+            "html/body/div[3]/div/div[1]/div/div/div[1]/div/input"
+        ]
+    },
+    {
+        "_id": "6272da62541aed4b347c0b1a",
+        "question": "Testing stages. Choose the right sequence",
+        "questionType": "theory",
+        "answers": [
+            "Requirements Management - Product Analysis - Developing a Test Strategy and Planning Quality Control Procedures - Generating Test Documentation - Prototype Testing - Basic Testing - Stabilization - Operation",
+            "Product analysis - Working with requirements -. Developing a test strategy and planning quality control procedures - Creating test documentation - Prototype testing - Basic testing - Stabilization - Operation",
+            "Requirements Management - Product Analysis - Developing a Test Strategy and Planning Quality Control Procedures - Prototype Testing - Generating Test Documentation - Basic Testing - Stabilization - Operation",
+            "Requirements Management - Product Analysis - Developing a Test Strategy and Planning Quality Control Procedures - Generating Test Documentation - Prototype Testing - Stabilization - Basic Testing - Operation"
+        ]
+    },
+    {
+        "_id": "6272da62541aed4b347c0b1b",
+        "question": "What are the main benefits of automated testing?",
+        "questionType": "theory",
+        "answers": [
+            "Fast execution",
+            "Reduced software maintenance costs",
+            "Saving testers time",
+            "Possibility of execution outside working hours",
+            "All options are correct",
+            "All options are incorrect"
+        ]
+    },
+    {
+        "_id": "6272da62541aed4b347c0b36",
+        "question": "Is a testing technique that involves testing with different ranges of valid and invalid inputs a specific module or component functionality?",
+        "questionType": "theory",
+        "answers": [
+            "Baseline testing",
+            "Gorilla Testing",
+            "Monkey testing",
+            "Agile testing",
+            "All options are correct",
+            "All options are incorrent"
+        ]
+    },
+    {
+        "_id": "6272da62541aed4b347c0b27",
+        "question": "Testing outside of normal performance is",
+        "questionType": "theory",
+        "answers": [
+            "Stress testing",
+            "Performance testing",
+            "Functional testing",
+            "Centiliter",
+            "All options are correct",
+            "All options are incorrent"
+        ]
+    },
+    {
+        "_id": "6272da62541aed4b347c0b1c",
+        "question": "What are the main types of locators in Selenium?",
+        "questionType": "theory",
+        "answers": [
+            "ID, ClassName",
+            "Name, TagName",
+            "LinkText, PartialLinkText",
+            "Xpath, CSS Selector, DOM",
+            "All options are correct",
+            "All options are incorrect"
+        ]
+    },
+    {
+        "_id": "6272da62541aed4b347c0b1e",
+        "question": "Most often, viewing elements in the Google Chrome browser on windows is launched by the button",
+        "questionType": "theory",
+        "answers": [
+            "F5",
+            "F7",
+            "F2",
+            "F9",
+            "F12"
+        ]
+    },
+    {
+        "_id": "6272da62541aed4b347c0b2f",
+        "question": "What is the order of priority testing?",
+        "questionType": "theory",
+        "answers": [
+            "System >> Reception >> Integration",
+            "System >> Integration >> Acceptance Testing",
+            "Module >> Integration >> System testing",
+            "Module >> System >> Acceptance test",
+            "All options are correct",
+            "All options are incorrent"
+        ]
+    },
+    {
+        "_id": "6272da62541aed4b347c0b1f",
+        "question": "Most often, viewing items in the Google Chrome browser on Mac is launched by this key combination",
+        "questionType": "theory",
+        "answers": [
+            "Cmd+Opt+O",
+            "Cmd+Opt+R",
+            "Cmd+Opt+J",
+            "Cmd+Opt+N",
+            "Cmd+Opt+W"
+        ]
+    },
+    {
+        "_id": "6272da62541aed4b347c0b22",
+        "question": "navigate().refresh(). This navigation command in Selenium:",
+        "questionType": "theory",
+        "answers": [
+            "Returns the user to the previous page from the browser history",
+            "Allows the user to navigate to the next page according to the browser history",
+            "Used to refresh the browser page",
+            "Allows the user to open a new window in the browser and follow the specified URL",
+            "There is no such command"
+        ]
+    },
+    {
+        "_id": "6272da62541aed4b347c0b35",
+        "question": "Upon opening a link to a website, the user receives the message 'This section of our website is under construction.'' Then what is this mistake?",
+        "questionType": "theory",
+        "answers": [
+            "URL error",
+            "Functional error",
+            "Structural error",
+            "All options are correct",
+            "All options are incorrent"
+        ]
+    },
+    {
+        "_id": "6272da62541aed4b347c0b29",
+        "question": "Checking the onBlur field is done",
+        "questionType": "theory",
+        "answers": [
+            "When we hover over the field",
+            "When we start entering data",
+            "When we press the submit button",
+            "After entering data",
+            "All options are correct",
+            "All options are incorrent"
+        ]
+    }
+]
+      },
+      "GetTestResults": {
+        "type": "object",
+        "properties": {
+          "answers": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "_id": {
+                  "type": "string",
+                  "description": "Question's id"
+                },
+                "answer": {
+                  "type": "string",
+                  "description": "Answer to the question"
+                }
+              }
+            }
+          }
+        },
+        "example": 
+{
+  "answers": [
+    {
+      "_id": "6272da62541aed4b347c0b31",
+      "answer": "1: 6: 10: 1000"
+    },
+    {
+      "_id": "6272da62541aed4b347c0b32",
+      "answer": "40-50"
+    },
+    {
+      "_id": "6272da62541aed4b347c0b32",
+      "answer": "Test cases should be reviewed and revised regularly"
+    },
+    {
+      "_id": "6272da62541aed4b347c0b25",
+      "answer": "Vulnerability testing"
+    },
+    {
+      "_id": "6272da62541aed4b347c0b34",
+      "answer": "Causes and effects of coverage"
+    },
+    {
+      "_id": "6272da62541aed4b347c0b35",
+      "answer": "Hidden defect"
+    },
+    {
+      "_id": "6272da62541aed4b347c0b36",
+      "answer": "Vulnerability testing"
+    },
+    {
+      "_id": "6272da62541aed4b347c0b37",
+      "answer": "V model"
+    },
+    {
+      "_id": "6272da62541aed4b347c0b38",
+      "answer": "All options are incorrect"
+    },
+    {
+      "_id": "6272da62541aed4b347c0b39",
+      "answer": "Gorilla Testing"
+    },
+    {
+      "_id": "6272da62541aed4b347c0b40",
+      "answer": "All options are correct"
+    },
+    {
+      "_id": "6272da62541aed4b347c0b41",
+      "answer": "Requirements Management - Product Analysis - Developing a Test Strategy and Planning Quality Control Procedures - Prototype Testing - Generating Test Documentation - Basic Testing - Stabilization - Operation"
+    }
+  ]
+}
+      },
+      "TestResult": {
+        "type": "object",
+        "properties": {
+          "result": {
+            "type": "string",
+            "description": "Test's result",
+            "example": "91%"
+          },
+          "mainMessage": {
+            "type": "string",
+            "description": "Result's main message",
+            "example": "Great!"
+          },
+          "secondaryMessage": {
+            "type": "string",
+            "description": "Result's secondary message",
+            "example": "You have very strong QA knowledge"
+          },
+          "correctAnswers":{"type": "integer",
+            "description": "Quantity of correcst answers",
+            "example": 9}
+        }
+      }
+    },
+     "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}

@@ -32,7 +32,7 @@ const getResults = async (req, res) => {
 
   const message = createResultMessage(userAnswers.length, comparedAnswers.length);
 
-  res.json(message);
+  res.json({ ...message, correctAnswers: comparedAnswers.length });
 };
 
 module.exports = getResults;
