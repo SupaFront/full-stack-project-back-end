@@ -578,11 +578,6 @@
       "TestResult": {
         "type": "object",
         "properties": {
-          "result": {
-            "type": "string",
-            "description": "Test's result",
-            "example": "91%"
-          },
           "mainMessage": {
             "type": "string",
             "description": "Result's main message",
@@ -595,7 +590,10 @@
           },
           "correctAnswers":{"type": "integer",
             "description": "Quantity of correcst answers",
-            "example": 9}
+            "example": 9},
+            "totalQuestions":{"type": "integer",
+            "description": "Quantity of questions",
+            "example": 12}
         }
       }
     },
