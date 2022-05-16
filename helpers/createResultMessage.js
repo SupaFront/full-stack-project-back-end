@@ -11,7 +11,6 @@ const createResultMessage = (qtyOfAllAnswers, rightAnswers) => {
   const percentage = Math.round((rightAnswers / qtyOfAllAnswers) * 100);
   const result = Math.floor(percentage / 20);
   const resultMessage = {
-    result: `${percentage}% `,
     mainMessage: messages[result],
     secondaryMessage: secondMessages[result],
   };

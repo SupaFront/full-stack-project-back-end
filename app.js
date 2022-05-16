@@ -1,11 +1,15 @@
 const express = require('express');
 const logger = require('morgan');
 const cors = require('cors');
+const swaggerUI = require('swagger-ui-express');
+const options = require('./swagger.json');
+
 require('dotenv').config();
 
 const { questionsRouter, usersRouter } = require('./routes/api');
 
 const app = express();
+app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(options));
 
 const formatsLogger = app.get('env') === 'development' ? 'dev' : 'short';
 
